@@ -1,10 +1,15 @@
 from libs import config_reader
 import psycopg2
 
-dbConfig = config_reader.read_configs_from_ini('configs/general.ini', 'PostgreSQL')
+scriptTitle = "Database Initialise Script"
+scriptVersion = "1.0"
+scriptCopyright = "(C) 2020 Dawid Pichen."
 
+print(f'{scriptTitle} (v. {scriptVersion})\n{scriptCopyright}\n')
+dbConfig = config_reader.read_configs_from_ini('configs/general.ini', 'PostgreSQL')
 dbConnection = psycopg2.connect(host=dbConfig['server'], port=dbConfig['port'], user=dbConfig['login'],
                                 password=dbConfig['password'], database=dbConfig['db'])
+print("Connected to DB.")
 try:
     dbCursor = dbConnection.cursor()
     try:

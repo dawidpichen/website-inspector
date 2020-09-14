@@ -7,6 +7,10 @@ from kafka import errors
 from libs import config_reader
 import json
 
+scriptTitle = "Website Monitor"
+scriptVersion = "1.0"
+scriptCopyright = "(C) 2020 Dawid Pichen."
+
 
 class WebsiteChecker:  # Class responsible for checking the websites.
     COULD_NOT_CONNECT = 700  # Used to indicate that there was a general connection problem (e.g. DNS record doesn't
@@ -14,7 +18,7 @@ class WebsiteChecker:  # Class responsible for checking the websites.
     DID_NOT_FIND_PATTERN = 701  # Used to indicate that the server returned the content (200) but there was no
     # match with provided regular expression.
 
-    def __init__(self, url, expected_regex):  # Initialise the class object with values.
+    def __init__(self, url, expected_regex = None):  # Initialise the class object with values.
         self._url = url
         self._regex = expected_regex
         self._regexCompiled = re.compile(expected_regex) if expected_regex else None  # Regular expression is being
@@ -27,7 +31,7 @@ class WebsiteChecker:  # Class responsible for checking the websites.
         try:
             connection = urllib.request.urlopen(self._url)  # Open the provided URL.
             response_code = connection.getcode()
-            if response_code == 200:  # If server responded OK and there is a regular expression
+            if response_code == 200 and self._regexCompiled:  # If server responded OK and there is a regular expression
                 # specified, let's download the page.
                 page_content = connection.read().decode()
         except urllib.error.HTTPError as error:
@@ -43,6 +47,7 @@ class WebsiteChecker:  # Class responsible for checking the websites.
 
 # The execution of the script starts here.
 if __name__ == "__main__":
+    print(f'{scriptTitle} (v. {scriptVersion})\n{scriptCopyright}\n')
     # Load all needed configurations.
     kafka_config = config_reader.read_configs_from_ini('configs/general.ini', 'Kafka')
     monitoring_config = config_reader.read_configs_from_ini('configs/general.ini', 'Monitoring')

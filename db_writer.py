@@ -5,6 +5,10 @@ from libs import config_reader
 from datetime import datetime, timezone
 import psycopg2
 
+scriptTitle = "Monitoring Results Database Writer"
+scriptVersion = "1.0"
+scriptCopyright = "(C) 2020 Dawid Pichen."
+
 
 class DatabaseWriter:
     def __init__(self, kafka_config, pgsql_config):
@@ -59,6 +63,7 @@ class DatabaseWriter:
 
 # The execution of the script starts here.
 if __name__ == "__main__":
+    print(f'{scriptTitle} (v. {scriptVersion})\n{scriptCopyright}\n')
     # Load all necessary configurations:
     kafkaConfig = config_reader.read_configs_from_ini('configs/general.ini', 'Kafka')
     pgsqlConfig = config_reader.read_configs_from_ini('configs/general.ini', 'PostgreSQL')
